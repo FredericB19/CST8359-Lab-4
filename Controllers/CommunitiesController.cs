@@ -21,7 +21,7 @@ namespace Lab4v2.Controllers
         }
 
         // GET: Communities
-        public async Task<IActionResult> Index(int? id)
+        public async Task<IActionResult> Index(string id)
         {
             var viewModel = new CommunityViewModel();
             viewModel.Communities = await _context.Communities
@@ -30,6 +30,13 @@ namespace Lab4v2.Controllers
                   .AsNoTracking()
                   .OrderBy(i => i.Title)
                   .ToListAsync();
+
+            if (id != null)
+            {
+                ViewData["CommunityID"] = id;
+                viewModel.CommunityMemberships = viewModel.Communities.Where(
+                    x => x.Id == id).Single().Membership;
+            }
 
 
             return View(viewModel);
